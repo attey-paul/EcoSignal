@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#28A745">
+    <meta name="description" content="EcoSignal - Plateforme citoyenne de signalement des problèmes d'insalubrité urbaine">
+    <title>EcoSignal - Signaler pour Agir</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet Maps -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="app-nav" role="navigation" aria-label="Navigation principale">
+            <div class="nav-container">
+                <div class="nav-logo" aria-label="EcoSignal">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                        <circle cx="12" cy="9" r="2.5"/>
+                    </svg>
+                    <span>EcoSignal</span>
+                </div>
+                <ul class="nav-menu" role="menubar">
+                    <li><button class="nav-link active" data-page="home" role="menuitem"><i class="fas fa-home"></i> Accueil</button></li>
+                    <li><button class="nav-link" data-page="map" role="menuitem"><i class="fas fa-map"></i> Carte</button></li>
+                    <li><button class="nav-link" data-page="tracking" role="menuitem"><i class="fas fa-search"></i> Suivi</button></li>
+                    <li><button class="nav-link" data-page="notifications" role="menuitem"><i class="fas fa-bell"></i> Notifications <span class="notif-badge" id="notif-badge">0</span></button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content" role="main">
+            
+            <!-- Splash Screen -->
+            <section id="splash" class="page page-active" role="region" aria-label="Écran de lancement">
+                <div class="splash-container">
+                    <div class="splash-content">
+                        <div class="splash-logo" aria-hidden="true">
+                            <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6.05 8.05c-2.73 2.73-2.73 7.17-.02 9.9 1.47-3.4 4.09-6.24 7.36-7.93-2.77 2.34-4.71 5.61-5.39 9.32 2.6 1.23 5.8.78 7.95-1.38C19.43 14.47 20 4 20 4S9.53 4.57 6.05 8.05z"/>
+                            </svg>
+                        </div>
+                        <h1 class="splash-title">EcoSignal</h1>
+                        <p class="splash-tagline">Ensemble pour une ville plus propre</p>
+                        <p class="splash-subtitle">Signalez. Localisez. Agissez.</p>
+                        <button class="btn btn-primary btn-large" id="splash-start" aria-label="Commencer l'application">
+                            <i class="fas fa-arrow-right"></i> Commencer
+                        </button>
+                    </div>
+                    <div class="splash-background" aria-hidden="true"></div>
+                </div>
+            </section>
+
+            <!-- Home Screen -->
+            <section id="home" class="page" role="region" aria-label="Accueil">
+                <div class="page-header">
+                    <h1>EcoSignal</h1>
+                    <p>Bienvenue, Citoyen</p>
+                </div>
+                <div class="container">
+                    <div class="section-title">Que souhaitez-vous faire ?</div>
+                    <div class="cards-grid">
+                        <div class="card" data-action="report" role="button" tabindex="0" aria-label="Créer un nouveau signalement">
+                            <div class="card-icon green">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3>Faire un signalement</h3>
+                            <p>Dépôt d'ordures, caniveau bouché — signalez en quelques secondes.</p>
+                            <span class="card-arrow"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+
+                        <div class="card" data-action="map" role="button" tabindex="0" aria-label="Voir la carte des signalements">
+                            <div class="card-icon blue">
+                                <i class="fas fa-map-location-dot"></i>
+                            </div>
+                            <h3>Voir la carte</h3>
+                            <p>Signalements en cours et résolus dans votre quartier.</p>
+                            <span class="card-arrow"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+
+                        <div class="card" data-action="tracking" role="button" tabindex="0" aria-label="Suivre votre signalement">
+                            <div class="card-icon green">
+                                <i class="fas fa-search-location"></i>
+                            </div>
+                            <h3>Suivre mon signalement</h3>
+                            <p>Entrez votre code anonyme pour voir l'avancement.</p>
+                            <span class="card-arrow"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+
+                        <div class="card" data-action="notifications" role="button" tabindex="0" aria-label="Voir vos notifications">
+                            <div class="card-icon orange">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <h3>Mes notifications</h3>
+                            <p>Mises à jour sur vos signalements et votre rue.</p>
+                            <span class="card-arrow"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Report Screen -->
+            <section id="report" class="page" role="region" aria-label="Créer un signalement">
+                <div class="page-header">
+                    <button class="btn-back" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
+                    <h1>Nouveau Signalement</h1>
+                    <div class="progress-indicator" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3">
+                        <span class="progress-step active">1</span>
+                        <span class="progress-step">2</span>
+                        <span class="progress-step">3</span>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <!-- Geolocation Alert -->
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Votre signalement est anonyme — aucune donnée personnelle n'est collectée</span>
+                    </div>
+
+                    <!-- Location Section -->
+                    <div class="location-box">
+                        <div class="location-map" id="location-preview" aria-label="Aperçu de votre position"></div>
+                        <div class="location-info">
+                            <h3><i class="fas fa-location-dot"></i> Votre position</h3>
+                            <p id="location-status">Détection en cours...</p>
+                            <button class="btn btn-outline" id="update-location" aria-label="Mettre à jour votre position">
+                                <i class="fas fa-refresh"></i> Actualiser
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="report-form" class="form" role="form" novalidate>
+                        <div class="form-group">
+                            <label for="problem-type">Quel est le problème ?</label>
+                            <select id="problem-type" name="type" required aria-required="true">
+                                <option value="">-- Sélectionnez un type --</option>
+                                <option value="dump">Dépôt sauvage d'ordures</option>
+                                <option value="water">Eaux stagnantes</option>
+                                <option value="hazard">Déchets dangereux</option>
+                                <option value="landfill">Décharge publique</option>
+                                <option value="other">Autre problème</option>
+                            </select>
+                            <span class="error-message" id="type-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Décrivez ce que vous voyez</label>
+                            <textarea id="description" name="description" placeholder="Minimum 20 caractères..." required aria-required="true" minlength="20" maxlength="500"></textarea>
+                            <span class="char-count"><span id="char-count">0</span>/500</span>
+                            <span class="error-message" id="description-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="photo">Ajoutez une photo (facultatif)</label>
+                            <div class="photo-upload">
+                                <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp" aria-label="Télécharger une photo">
+                                <div class="upload-area" role="button" tabindex="0" aria-label="Glissez-déposez une photo ou cliquez">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Glissez-déposez ou cliquez</p>
+                                    <small>JPG, PNG, WebP (max 5 MB)</small>
+                                </div>
+                                <div id="photo-preview" class="photo-preview"></div>
+                            </div>
+                            <span class="error-message" id="photo-error"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" aria-label="Envoyer le signalement">
+                                <i class="fas fa-paper-plane"></i> Envoyer le signalement
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Confirmation Screen -->
+            <section id="confirmation" class="page" role="region" aria-label="Confirmation d'envoi">
+                <div class="confirmation-container">
+                    <div class="confirmation-success">
+                        <div class="success-icon" aria-hidden="true">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h1>Signalement envoyé !</h1>
+                        <p>Merci de contribuer à la propreté de votre quartier. Votre signalement a bien été transmis aux autorités.</p>
+                    </div>
+
+                    <div class="container">
+                        <div class="tracking-code-box">
+                            <p class="tracking-label">Votre code de suivi anonyme</p>
+                            <div class="tracking-code" id="tracking-code-display">ECO-2026-XXXX</div>
+                            <button class="btn btn-copy" id="copy-code" aria-label="Copier le code de suivi">
+                                <i class="fas fa-copy"></i> Copier le code
+                            </button>
+                            <div class="tracking-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Notez ce code — il est votre seul moyen de suivi</span>
+                            </div>
+                        </div>
+
+                        <div class="confirmation-actions">
+                            <button class="btn btn-primary" id="action-track" aria-label="Suivre le signalement">
+                                <i class="fas fa-search"></i> Suivre mon signalement
+                            </button>
+                            <button class="btn btn-outline" id="action-share" aria-label="Partager sur WhatsApp">
+                                <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+                            </button>
+                            <button class="btn btn-ghost" id="action-home" aria-label="Retour à l'accueil">
+                                <i class="fas fa-home"></i> Retour à l'accueil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Map Screen -->
+            <section id="map" class="page" role="region" aria-label="Carte des signalements">
+                <div class="page-header">
+                    <button class="btn-back" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
+                    <h1>Carte des signalements</h1>
+                </div>
+
+                <div class="map-controls">
+                    <button class="filter-btn active" data-filter="all" aria-label="Filtrer tous les signalements">Tous</button>
+                    <button class="filter-btn" data-filter="received" aria-label="Filtrer les signalements reçus">Reçus</button>
+                    <button class="filter-btn" data-filter="processing" aria-label="Filtrer les signalements en cours">En cours</button>
+                    <button class="filter-btn" data-filter="resolved" aria-label="Filtrer les signalements résolus">Résolus</button>
+                </div>
+
+                <div id="map-container" class="map-container" role="region" aria-label="Carte interactive Leaflet"></div>
+
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <span class="legend-color received"></span>
+                        <span>Reçu</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color processing"></span>
+                        <span>En cours</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color resolved"></span>
+                        <span>Résolu</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tracking Screen -->
+            <section id="tracking" class="page" role="region" aria-label="Suivi du signalement">
+                <div class="page-header">
+                    <button class="btn-back" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
+                    <h1>Suivi du signalement</h1>
+                </div>
+
+                <div class="container">
+                    <form id="tracking-search" class="tracking-search" role="search">
+                        <input type="text" id="tracking-input" placeholder="Entrez votre code ECO-XXXX-XXXX" required aria-label="Code de suivi" aria-required="true" maxlength="15">
+                        <button type="submit" class="btn btn-primary" aria-label="Rechercher">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+
+                    <div id="tracking-result" class="tracking-result hidden">
+                        <div class="tracking-card">
+                            <div class="tracking-header">
+                                <div>
+                                    <h3 id="tracking-title">Chargement...</h3>
+                                    <p id="tracking-meta">--</p>
+                                </div>
+                                <span class="status-badge" id="tracking-status">--</span>
+                            </div>
+
+                            <div class="tracking-timeline" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <div class="timeline-item">
+                                    <div class="timeline-circle completed" aria-label="Étape 1: Signalement reçu">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h4>Signalement reçu</h4>
+                                        <p id="timeline-1">Votre signalement a été enregistré</p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-circle completed" aria-label="Étape 2: Assigné à l'équipe">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h4>Assigné à l'équipe</h4>
+                                        <p id="timeline-2">Pris en charge par le District</p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-circle active" aria-label="Étape 3: Intervention en cours">3</div>
+                                    <div class="timeline-content">
+                                        <h4>Intervention en cours</h4>
+                                        <p id="timeline-3">L'équipe intervient sur place</p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-circle pending" aria-label="Étape 4: Résolu">4</div>
+                                    <div class="timeline-content">
+                                        <h4>Résolu</h4>
+                                        <p id="timeline-4">En attente de validation</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tracking-empty" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Entrez votre code de suivi pour voir l'avancement</p>
+                    </div>
+
+                    <div id="tracking-error" class="alert alert-error hidden" role="alert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="tracking-error-message"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notifications Screen -->
+            <section id="notifications" class="page" role="region" aria-label="Notifications">
+                <div class="page-header">
+                    <button class="btn-back" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
+                    <h1>Notifications</h1>
+                </div>
+
+                <div class="container">
+                    <div id="notifications-list" class="notifications-list" role="feed" aria-live="polite"></div>
+                    <div id="notifications-empty" class="empty-state">
+                        <i class="fas fa-bell-slash"></i>
+                        <p>Aucune notification pour le moment</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notification -->
+        <div id="toast-container" class="toast-container" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+        <!-- Modal for image preview -->
+        <div id="image-modal" class="modal hidden" role="dialog" aria-label="Aperçu de l'image">
+            <div class="modal-content">
+                <button class="modal-close" aria-label="Fermer"><i class="fas fa-times"></i></button>
+                <img id="modal-image" src="" alt="Aperçu de l'image">
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    
+    <!-- App Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
